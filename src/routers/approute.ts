@@ -1,9 +1,9 @@
 import { Router } from "express";
 import appRouteController from "../controllers/app.controller";
 
-const route = Router();
+const router = Router();
 const app = new appRouteController();
 
-route.get('/console', app.console);
+router.get('/console', app.console);
 
-export default route;
+export default router;
