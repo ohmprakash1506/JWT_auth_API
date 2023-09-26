@@ -7,10 +7,9 @@ async function generateToken(user: any) {
   try {
     let header = user;
     let token = jwt.sign(header, secert_key);
-    console.log(token);
     return token;
   } catch (error) {
-    return console.log(error);
+    return error;
   }
 }
 
