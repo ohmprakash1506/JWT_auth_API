@@ -3,9 +3,9 @@ import "dotenv/config";
 
 const secert_key: any = process.env.ACCESS_TOKEN_SECERT;
 
-async function generateToken(user: any) {
+async function generateToken(data: any) {
   try {
-    let header = user;
+    let header = data;
     let token = jwt.sign(header, secert_key);
     return token;
   } catch (error) {

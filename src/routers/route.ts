@@ -1,6 +1,7 @@
 import { Router } from "express";
 import appRoute from "./approute";
 import tokenRoute from "./tokenroute";
+import authRoute from "./authRoute";
 
 const router = Router();
 
@@ -12,6 +13,10 @@ const defaultroute = [
   {
     path:"/token",
     route: tokenRoute
+  },
+  {
+    path:"/auth",
+    route:authRoute
   }
 ];
 
