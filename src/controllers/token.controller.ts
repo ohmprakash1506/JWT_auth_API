@@ -6,7 +6,7 @@ import HttpStatusCode from "http-status-codes";
 export default class tokenGenerator {
   accessToken = async (req: Request, res: Response) => {
     try {
-      const user = req.body.user;
+      const {user, password }= req.body
       const accessTokenGenerated = await generateToken(user).then((data) => {
         const message = `Access token generated`;
         const statusCode = HttpStatusCode.OK;
