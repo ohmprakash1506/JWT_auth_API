@@ -6,10 +6,6 @@ export default class UserService {
   create = async (data: any) => {
     try {
       console.log(data);
-    //   let userData: any = {
-    //     user: data.user,
-    //     password: data.password
-    //   }
       return await user.create(data);
     } catch (error) {
       console.log(error);

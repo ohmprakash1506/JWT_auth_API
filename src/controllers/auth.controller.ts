@@ -19,7 +19,7 @@ export default class authController {
         const message = `Access token generated`;
         const statusCode = HttpStatusCode.OK;
         const token = { accessTokenGenerated: data };
-        const resData = {userData, token};
+        const resData = [userData, token];
         res.json(returnSuccuss(statusCode, message, resData));
       });
     } catch (error) {
