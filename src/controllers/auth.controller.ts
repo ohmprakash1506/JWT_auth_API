@@ -60,7 +60,7 @@ export default class authController {
     } catch (error) {
       const message = `User signUp failed`;
       const statusCode = HttpStatusCode.BAD_REQUEST;
-      res.json(returnSuccuss(statusCode, message));
+      res.json(returnError(statusCode, message));
     }
   } 
 }

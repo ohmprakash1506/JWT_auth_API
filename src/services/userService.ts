@@ -24,4 +24,16 @@ export default class UserService {
       return returnError(status, message);
     }
   };
+
+  getAllUser = async () => {
+    try {
+      return await user.find();
+    } catch (error) {
+      const status = httpStatusCode.BAD_REQUEST;
+      const message = `Somthing went wrong`;
+      return returnError(status, message);
+    }
+  };
+
+  updateuser = async (data : any) =>{}
 }
