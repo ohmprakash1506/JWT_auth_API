@@ -40,27 +40,43 @@ export default class authController {
     }
   };
 
-  signUp = async (req: Request, res: Response) =>{
+  signUp = async (req: Request, res: Response) => {
     try {
-      const {username , password } = req.body;
-      const data = { username , password };
-      const userData : any = await userService.create(data).then((data) => {
-        const response = data;
-        if(!response){
-          return `Error in User creation`;
-        }else {
-          return response;
-        }
-      })
+      const { username, password } = req.body;
+      const data = { username, password };
+      const userEmail = data.username;
 
-      const message = `User signUp successfull`;
-      const statusCode = HttpStatusCode.OK;
-      const resData = userData ;
-      res.json(returnSuccuss(statusCode, message, resData));
+      const checkData = userEmail;
+
+      const findUser: any = await userService
+        .getUser(checkData)
+        .then((data) => {
+          return data;
+        });
+
+      if (findUser) {
+        const statusCode = HttpStatusCode.FORBIDDEN;
+        const message = `Already existing user`;
+        res.json(returnError(statusCode, message));
+      } else {
+        const userData: any = await userService.create(data).then((data) => {
+          const response = data;
+          if (!response) {
+            return `Error in User creation`;
+          } else {
+            return response;
+          }
+        });
+
+        const message = `User signUp successfull`;
+        const statusCode = HttpStatusCode.OK;
+        const resData = userData;
+        res.json(returnSuccuss(statusCode, message, resData));
+      }
     } catch (error) {
       const message = `User signUp failed`;
       const statusCode = HttpStatusCode.BAD_REQUEST;
       res.json(returnError(statusCode, message));
     }
-  } 
+  };
 }

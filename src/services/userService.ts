@@ -17,7 +17,10 @@ export default class UserService {
 
   getUser = async (data: any) => {
     try {
-      return await user.findOne(data);
+      const userCheck = await user.findOne({ username: data });
+      if(userCheck){
+        return true;
+      }
     } catch (error) {
       const status = httpStatusCode.BAD_REQUEST;
       const message = `Somthing went wrong`;
@@ -35,5 +38,17 @@ export default class UserService {
     }
   };
 
-  updateuser = async (data : any) =>{}
+  updateuser = async (params: any, data: any) => {
+    try {
+      return await user.findOneAndUpdate(
+        { username: params },
+        { $set: { username: data } },
+        { new: true }
+      );
+    } catch (error) {
+      const status = httpStatusCode.BAD_REQUEST;
+      const message = `Somthing went wrong in update`;
+      return returnError(status, message);
+    }
+  };
 }
