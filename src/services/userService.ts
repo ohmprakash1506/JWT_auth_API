@@ -17,8 +17,12 @@ export default class UserService {
 
   getUser = async (data: any) => {
     try {
-      const userCheck = await user.findOne({ username: data });
-      if(userCheck){
+      console.log(data);
+      const userCheck = await user.findOne({
+        username: data.username,
+        password: data.password,
+      });
+      if (userCheck) {
         return true;
       }
     } catch (error) {

@@ -13,25 +13,37 @@ export default class authController {
       const { username, password } = req.body;
       const data = { username, password };
 
-      const accessTokenGenerated = await jwtToken
-        .accessToken(data)
-        .then((accessdata) => {
-          return accessdata;
-        });
-      const refreshTokenGenerated = await jwtToken
-        .refreshToken(data)
-        .then((refreshdata) => {
-          return refreshdata;
-        });
+      const checkData = data;
 
-      const message = `sign in verified`;
-      const statusCode = HttpStatusCode.OK;
-      const token = {
-        accessTokenGenerated: accessTokenGenerated,
-        refreshTokenGenerated: refreshTokenGenerated,
-      };
-      const resData = token;
-      res.json(returnSuccuss(statusCode, message, resData));
+      const findUser = await userService.getUser(checkData).then((data) => {
+        return data;
+      });
+
+      if (!findUser) {
+        const statusCode = HttpStatusCode.FORBIDDEN;
+        const message = `User deatails dose not exist , Please sign up first`;
+        res.json(returnError(statusCode, message));
+      } else {
+        const accessTokenGenerated = await jwtToken
+          .accessToken(data)
+          .then((accessdata) => {
+            return accessdata;
+          });
+        const refreshTokenGenerated = await jwtToken
+          .refreshToken(data)
+          .then((refreshdata) => {
+            return refreshdata;
+          });
+
+        const message = `sign in verified`;
+        const statusCode = HttpStatusCode.OK;
+        const token = {
+          accessTokenGenerated: accessTokenGenerated,
+          refreshTokenGenerated: refreshTokenGenerated,
+        };
+        const resData = token;
+        res.json(returnSuccuss(statusCode, message, resData));
+      }
     } catch (error) {
       console.log(error);
       const message = `token generation error`;
@@ -46,10 +58,8 @@ export default class authController {
       const data = { username, password };
       const userEmail = data.username;
 
-      const checkData = userEmail;
-
       const findUser: any = await userService
-        .getUser(checkData)
+        .getUser(userEmail)
         .then((data) => {
           return data;
         });
