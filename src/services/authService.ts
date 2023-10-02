@@ -6,17 +6,6 @@ import bycrpt from 'bcrypt';
 const saltRound = 10;
 
 export default class AuthService {
-  checkLogin = async (data: any) => {
-    try {
-      const userCheck = await user.find({username: data.username});
-      return true;
-    } catch (error) {
-      const statusCode = HttpStatusCode.FORBIDDEN;
-      const message = `user deatails dose not match`;
-      return returnError(statusCode, message);
-    }
-  };
-
   hashPassword = async (data: any) =>{
     try {
         const bycrptpassword = await bycrpt.hash(data, saltRound).then((hash) => {
@@ -33,10 +22,14 @@ export default class AuthService {
 
   checkPassword = async (data: any) =>{
     try {
-        const user = data.username;
-        const userdata = await user.findOne({user});
-        console.log(userdata);
-        return userdata;
+        const password = data.password;
+        const userdata = await user.findOne({username : data.username}).then((data) =>{
+            return data;
+        })
+        const userResponse = userdata;
+        const hashPassword: any = userResponse?.password;
+        const response = await bycrpt.compare(password, hashPassword);
+        return response;
     } catch (error) {
         const statusCode = HttpStatusCode.FORBIDDEN;
         const message = `Password validation failed`;
