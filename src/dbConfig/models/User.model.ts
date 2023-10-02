@@ -6,14 +6,10 @@ const userSchema = new Schema<IUser>(
     username: {
       type: String,
       required: true,
-      minlength:6,
-      maxlength:255
     },
     password: {
       type: String,
       required: true,
-      minlength:10,
-      maxlength:25
     },
     role: {
       type: String,

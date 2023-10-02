@@ -1,9 +1,11 @@
 import UserService from "../services/userService";
+import AuthService from "../services/authService";
 import { Request, Response } from "express";
 import { returnSuccuss, returnError } from "../middlewares/ApiResponseHandler";
 import generateToken from "../services/tokenService";
 import HttpStatusCode from "http-status-codes";
 
+const authService = new AuthService();
 const userService = new UserService();
 const jwtToken = new generateToken();
 
@@ -13,17 +15,30 @@ export default class authController {
       const { username, password } = req.body;
       const data = { username, password };
 
-      const checkData = data;
+      const checkUser = data.username;
+      const checkLogin = data;
+      const userPassword = data.password;
 
-      const findUser = await userService.getUser(checkData).then((data) => {
+      const findUser = await userService.getUser(checkUser).then((data) => {
         return data;
       });
 
+      const checkPassword = await authService.checkPassword(checkLogin).then((data) => {
+        return data;
+      })
+
       if (!findUser) {
         const statusCode = HttpStatusCode.FORBIDDEN;
-        const message = `User deatails dose not exist , Please sign up first`;
+        const message = `Invalid user email`;
         res.json(returnError(statusCode, message));
-      } else {
+      } 
+
+      if(!checkPassword){
+        const statusCode = HttpStatusCode.FORBIDDEN;
+        const message = `Invalid user password`;
+        res.json(returnError(statusCode, message))
+      }
+
         const accessTokenGenerated = await jwtToken
           .accessToken(data)
           .then((accessdata) => {
@@ -43,7 +58,7 @@ export default class authController {
         };
         const resData = token;
         res.json(returnSuccuss(statusCode, message, resData));
-      }
+      
     } catch (error) {
       console.log(error);
       const message = `token generation error`;

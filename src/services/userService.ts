@@ -1,12 +1,24 @@
 import user from "../dbConfig/models/User.model";
 import { returnError } from "../middlewares/ApiResponseHandler";
 import httpStatusCode from "http-status-codes";
+import bcrypt from 'bcrypt';
+
 
 export default class UserService {
   create = async (data: any) => {
     try {
-      console.log(data);
-      return await user.create(data);
+      console.log(`recived data:`,data);
+      const password = data.password;
+      const saltRound = 10;
+      const encryptPassword = await bcrypt.hash(password, saltRound).then((data) => {
+        return data;
+      })
+      const hashedPassword = encryptPassword.toString()
+      const userData = {
+        username: data.username,
+        password: hashedPassword
+      }
+      return await user.create(userData);
     } catch (error) {
       console.log(error);
       const status = httpStatusCode.BAD_REQUEST;
@@ -17,10 +29,8 @@ export default class UserService {
 
   getUser = async (data: any) => {
     try {
-      console.log(data);
       const userCheck = await user.findOne({
-        username: data.username,
-        password: data.password,
+        username: data
       });
       if (userCheck) {
         return true;
