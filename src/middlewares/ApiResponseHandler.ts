@@ -36,6 +36,13 @@ export const returnError = (statusCode: number, message: string) => {
       message,
     },
   };
-  logger.error(statusCode, message);
+
+  const logResponse: loggerResponse = {
+    statusCode,
+    status: false,
+    message,
+  };
+
+  logger.error(logResponse);
   return response;
 };
