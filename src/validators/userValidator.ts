@@ -1,27 +1,27 @@
 import { NextFunction, Request, Response } from "express";
+import Validators from "./schemaValidator";
 import HttpStatusCode from "http-status-codes";
-import { APIServiceResponse } from "../@types/APIServiceResponse";
-import { APPCONSTANT } from "../config/constant";
-import Joi from "joi";
+import { returnError } from "../middlewares/ApiResponseHandler";
 
-export default class userValidator {
-  async UserSignUpValidator(req: Request, res: Response, next: NextFunction) {
-    //* joi schema object
+const validator = new Validators();
 
-    const schema = Joi.object({
-      username: Joi.string().email().required(),
-      password: Joi.string().allow("").allow(null),
-    });
-
-    //* schema options
-
-    const options = {
-      abortEarly: false,
-      allowUnknown: true,
-      stripunknown: true,
-    };
-
-    //validate input
-    const { error, value } = schema.validate(req.body, options);
-  }
+export default class UserValidator {
+  userSignUp = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { username, password } = req.body;
+      const payload = { username, password };
+      const { error } = validator.SignUpValidator.validate(payload);
+      if (error) {
+        const statusCode = HttpStatusCode.NOT_ACCEPTABLE;
+        const message = `user validation error : ${error.message}`;
+        return res.json(returnError(statusCode, message));
+      } else {
+        next();
+      }
+    } catch (error: any) {
+      const statusCode = HttpStatusCode.BAD_REQUEST;
+      const message = `Somthing went wrong : ${error.message}`;
+      res.json(returnError(statusCode, message));
+    }
+  };
 }
