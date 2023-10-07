@@ -23,4 +23,22 @@ export default class UserValidator {
       res.json(returnError(statusCode, message));
     }
   };
+
+  userSignIn = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const payload = req.body;
+      const { error } = validator.SignInValidator.validate(payload);
+      if (error) {
+        const statusCode = HttpStatusCode.NOT_ACCEPTABLE;
+        const message = `Somthing went wrong: ${error.message}`;
+        res.json(returnError(statusCode, message));
+      } else {
+        next();
+      }
+    } catch (error: any) {
+      const statusCode = HttpStatusCode.BAD_REQUEST;
+      const message = `Somthing went wrong: ${error.message}`;
+      res.json(returnError(statusCode, message));
+    }
+  };
 }

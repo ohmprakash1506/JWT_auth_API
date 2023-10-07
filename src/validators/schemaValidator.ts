@@ -15,4 +15,11 @@ export default class Validators {
   }).options({
     abortEarly: false,
   });
+
+  SignInValidator = Joi.object({
+    username: Joi.string().email().required(),
+    password: Joi.string().required(),
+  }).options({
+    abortEarly: false,
+  });
 }

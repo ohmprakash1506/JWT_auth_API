@@ -6,7 +6,7 @@ const route = Router();
 const auth = new authController();
 const userValidator = new UserValidator();
 
-route.post("/signin", auth.signIn);
+route.post("/signin", userValidator.userSignIn, auth.signIn);
 route.post("/signup", userValidator.userSignUp, auth.signUp);
 
 export default route;
