@@ -8,8 +8,7 @@ const validator = new Validators();
 export default class UserValidator {
   userSignUp = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { username, password } = req.body;
-      const payload = { username, password };
+      const payload = req.body;
       const { error } = validator.SignUpValidator.validate(payload);
       if (error) {
         const statusCode = HttpStatusCode.NOT_ACCEPTABLE;

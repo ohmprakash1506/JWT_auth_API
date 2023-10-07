@@ -28,40 +28,39 @@ export default class authController {
           return data;
         });
 
-        if (!findUser) {
-          const statusCode = HttpStatusCode.FORBIDDEN;
-          const message = `Invalid user email`;
-          res.json(returnError(statusCode, message));
-        }
-      
-        if (!checkPassword) {
-          const statusCode = HttpStatusCode.FORBIDDEN;
-          const message = `Invalid user password`;
-          res.json(returnError(statusCode, message));
-        }
-
-      if(findUser === true && checkPassword === true){
-        const accessTokenGenerated = await jwtToken
-        .accessToken(data)
-        .then((accessdata) => {
-          return accessdata;
-        });
-      const refreshTokenGenerated = await jwtToken
-        .refreshToken(data)
-        .then((refreshdata) => {
-          return refreshdata;
-        });
-
-      const message = `sign in verified`;
-      const statusCode = HttpStatusCode.OK;
-      const token = {
-        accessTokenGenerated: accessTokenGenerated,
-        refreshTokenGenerated: refreshTokenGenerated,
-      };
-      const resData = token;
-      res.json(returnSuccuss(statusCode, message, resData));
+      if (!findUser) {
+        const statusCode = HttpStatusCode.FORBIDDEN;
+        const message = `Invalid user email`;
+        res.json(returnError(statusCode, message));
       }
-      
+
+      if (!checkPassword) {
+        const statusCode = HttpStatusCode.FORBIDDEN;
+        const message = `Invalid user password`;
+        res.json(returnError(statusCode, message));
+      }
+
+      if (findUser === true && checkPassword === true) {
+        const accessTokenGenerated = await jwtToken
+          .accessToken(data)
+          .then((accessdata) => {
+            return accessdata;
+          });
+        const refreshTokenGenerated = await jwtToken
+          .refreshToken(data)
+          .then((refreshdata) => {
+            return refreshdata;
+          });
+
+        const message = `sign in verified`;
+        const statusCode = HttpStatusCode.OK;
+        const token = {
+          accessTokenGenerated: accessTokenGenerated,
+          refreshTokenGenerated: refreshTokenGenerated,
+        };
+        const resData = token;
+        res.json(returnSuccuss(statusCode, message, resData));
+      }
     } catch (error) {
       console.log(error);
       const message = `token generation error`;
@@ -72,8 +71,7 @@ export default class authController {
 
   signUp = async (req: Request, res: Response) => {
     try {
-      const { username, password } = req.body;
-      const data = { username, password };
+      const data = req.body;
       const userEmail = data.username;
 
       const findUser: any = await userService

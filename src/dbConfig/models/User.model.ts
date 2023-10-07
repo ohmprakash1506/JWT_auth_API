@@ -3,6 +3,27 @@ import IUser from "../interface/userInterface";
 
 const userSchema = new Schema<IUser>(
   {
+    first_name: {
+      type: String,
+      required: true,
+    },
+    last_name: {
+      type: String,
+      required: true,
+    },
+    date_of_birth: {
+      type: String,
+      required: true,
+    },
+    contact_number: {
+      type: String,
+      required: true,
+    },
+    gender: {
+      type: String,
+      enum: ["male", "female", "Male", "Female"],
+      required: true,
+    },
     username: {
       type: String,
       required: true,
@@ -33,7 +54,7 @@ const userSchema = new Schema<IUser>(
     },
   },
   {
-    timestamps: true,
+    timestamps: false,
   }
 );
 

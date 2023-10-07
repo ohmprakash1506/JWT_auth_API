@@ -15,6 +15,11 @@ export default class UserService {
         });
       const hashedPassword = encryptPassword.toString();
       const userData = {
+        first_name: data.first_name,
+        last_name: data.last_name,
+        date_of_birth: data.date_of_birth,
+        contact_number: data.contact_number,
+        gender: data.gender,
         username: data.username,
         password: hashedPassword,
       };
