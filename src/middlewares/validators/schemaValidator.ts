@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { APPCONSTANT } from "../config/constant";
+import { APPCONSTANT } from "../../config/constant";
 
 export default class Validators {
   SignUpValidator = Joi.object({

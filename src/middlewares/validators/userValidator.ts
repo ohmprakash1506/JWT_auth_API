@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import Validators from "./schemaValidator";
 import HttpStatusCode from "http-status-codes";
-import { returnError } from "../middlewares/ApiResponseHandler";
+import { returnError } from "../ApiResponseHandler";
 
 const validator = new Validators();
 
