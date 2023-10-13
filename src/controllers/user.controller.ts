@@ -27,27 +27,28 @@ export default class userController {
 
   update = async (req: Request, res: Response) => {
     try {
-        const {username, password } = req.body;
-        const user = {username, password }
+      const data = req.body;
+      const user = data.username;
 
-        if(!user.username){
-         return `User details dose not exists`;
-        }else{
-          const params = user.username
-          const data = await userSerivce.updateuser(params, user).then((data) => {
-            return data
-          })
+      const userExist = await userSerivce.getUser(user).then((data) => {
+        return data;
+      });
 
-          const statusCode = HttpStatusCode.OK;
-          const message = `User details updated successfully`;
-          const resData: any = data;
-
-          res.json(returnSuccuss(statusCode, message, resData));
-        }
-    } catch (error) {
-        const statusCode = HttpStatusCode.BAD_REQUEST;
-        const message = `Error in updating user deatils`;
+      if (!userExist) {
+        const statusCode = HttpStatusCode.FORBIDDEN;
+        const message = "Invalied user name";
         res.json(returnError(statusCode, message));
+      } else {
+        const id = data.id;
+        const userData = data;
+        const response = await userSerivce.updateuser(id, userData);
+        const statusCode = HttpStatusCode.OK;
+        const message = `user deatils updated successfully`;
+      }
+    } catch (error) {
+      const statusCode = HttpStatusCode.BAD_REQUEST;
+      const message = `Error in updating user deatils`;
+      res.json(returnError(statusCode, message));
     }
-  }
+  };
 }

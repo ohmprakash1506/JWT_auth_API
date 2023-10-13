@@ -57,13 +57,11 @@ export default class UserService {
     }
   };
 
-  updateuser = async (params: any, data: any) => {
+  updateuser = async (id: any, data: any) => {
     try {
-      return await user.findOneAndUpdate(
-        { username: params },
-        { $set: { username: data } },
-        { new: true }
-      );
+      const filter = id;
+      const update = data;
+      return await user.findByIdAndUpdate(filter, update);
     } catch (error) {
       const status = httpStatusCode.BAD_REQUEST;
       const message = `Somthing went wrong in update`;
