@@ -27,27 +27,72 @@ export default class userController {
 
   update = async (req: Request, res: Response) => {
     try {
+      const id = req.params.id;
       const data = req.body;
-      const user = data.username;
 
-      const userExist = await userSerivce.getUser(user).then((data) => {
+      const checkId = await userSerivce.getUserId(id).then((data) => {
         return data;
       });
 
-      if (!userExist) {
+      if (!checkId) {
         const statusCode = HttpStatusCode.FORBIDDEN;
-        const message = "Invalied user name";
+        const message = `invalied user`;
         res.json(returnError(statusCode, message));
       } else {
-        const id = data.id;
-        const userData = data;
-        const response = await userSerivce.updateuser(id, userData);
-        const statusCode = HttpStatusCode.OK;
-        const message = `user deatils updated successfully`;
+        const updateRecord = await userSerivce
+          .updateUser(id, data)
+          .then((data) => {
+            return data;
+          });
+
+        if (!updateRecord) {
+          const statusCode = HttpStatusCode.FORBIDDEN;
+          const message = `Error in updating record`;
+          res.json(returnError(statusCode, message));
+        } else {
+          const statusCode = HttpStatusCode.OK;
+          const message = `User details updated successfully`;
+          const response = updateRecord;
+          res.json(returnSuccuss(statusCode, message, response));
+        }
       }
     } catch (error) {
       const statusCode = HttpStatusCode.BAD_REQUEST;
       const message = `Error in updating user deatils`;
+      res.json(returnError(statusCode, message));
+    }
+  };
+
+  delete = async (req: Request, res: Response) => {
+    try {
+      const id = req.params.id;
+
+      const checkId = await userSerivce.getUserId(id).then((data) => {
+        return data;
+      });
+
+      if (!checkId) {
+        const statusCode = HttpStatusCode.FORBIDDEN;
+        const message = `invalied user`;
+        res.json(returnError(statusCode, message));
+      }
+
+      const user = await userSerivce.deleteUser(id).then((data) => {
+        return data;
+      });
+      if (!user) {
+        const statusCode = HttpStatusCode.FORBIDDEN;
+        const message = `Error in deleting user details`;
+        res.json(returnError(statusCode, message));
+      } else {
+        const statusCode = HttpStatusCode.OK;
+        const message = `User details deleted successfully`;
+        const response = { id: id };
+        res.json(returnSuccuss(statusCode, message, response));
+      }
+    } catch (error) {
+      const statusCode = HttpStatusCode.INTERNAL_SERVER_ERROR;
+      const message = `Internal server error`;
       res.json(returnError(statusCode, message));
     }
   };

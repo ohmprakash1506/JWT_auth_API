@@ -57,11 +57,35 @@ export default class UserService {
     }
   };
 
-  updateuser = async (id: any, data: any) => {
+  getUserId = async (data: any) => {
+    try {
+      const id = await user.find({ _id: data });
+      if (id) {
+        return true;
+      }
+    } catch (error) {
+      const statusCode = httpStatusCode.BAD_REQUEST;
+      const message = `Somthing went wrong`;
+      return returnError(statusCode, message);
+    }
+  };
+
+  updateUser = async (id: any, data: any) => {
     try {
       const filter = id;
       const update = data;
-      return await user.findByIdAndUpdate(filter, update);
+      return await user.findByIdAndUpdate(filter, update, { new: true });
+    } catch (error) {
+      const status = httpStatusCode.BAD_REQUEST;
+      const message = `Somthing went wrong in update`;
+      return returnError(status, message);
+    }
+  };
+
+  deleteUser = async (id: any) => {
+    try {
+      const userId = id;
+      return user.findByIdAndDelete(userId);
     } catch (error) {
       const status = httpStatusCode.BAD_REQUEST;
       const message = `Somthing went wrong in update`;
