@@ -28,15 +28,4 @@ export default class TokenService {
       return error;
     }
   };
-
-  verifyToken = async (data: any) => {
-    try {
-      let token = data;
-      let verifyToken = jwt.verify(token, access_secert_key);
-      console.log(`verfied token`, verifyToken);
-      return verifyToken;
-    } catch (error) {
-      return error;
-    }
-  };
 }
