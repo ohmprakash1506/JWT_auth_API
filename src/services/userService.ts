@@ -74,6 +74,7 @@ export default class UserService {
     try {
       const filter = id;
       const update = data;
+      update.updatedTime = new Date();
       return await user.findByIdAndUpdate(filter, update, { new: true });
     } catch (error) {
       const status = httpStatusCode.BAD_REQUEST;
